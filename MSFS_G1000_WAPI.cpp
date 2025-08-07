@@ -5,11 +5,12 @@
 #include <Windows.h>
 #include <wchar.h>
 #include <map>
+#include <conio.h>
 #include "WASMIF.h"
 
 int main()
 {
-     std::cout << "Hello World!\n";
+     std::cout << "Press 'z' to presss the G1000 PFD Soft Button 2\nPress 'q' to quit.";
      /*
      ?? where is WASMClient.ini?? Supposed to be in the same directory as the executable
      if it doesn't exist, these variables are set in default.cpp:
@@ -35,20 +36,20 @@ int main()
      const char* calcCode = "(>H:AS1000_PFD_SOFTKEYS_2)";
      char ccode[1024] = { 0 }; // Pad to 1024 bytes, zero-initialized
      strncpy_s(ccode, sizeof(ccode), calcCode, _TRUNCATE); // Safe copy, truncates if necessary
-     wasmPtr->executeCalclatorCode(ccode);
 
-     Sleep(1000);     //or the executeCalculatorCode will silently fail
+     while (true)
+     {
+         if (_kbhit()) {
+             int ch = _getch();
+             if (ch == 'z') {
+                 wasmPtr->executeCalclatorCode(ccode);
+             }
+             else if (ch == 'q') {
+                 break;
+             }
+         }
+         Sleep(10);
+     }
 
      wasmPtr->end();
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
